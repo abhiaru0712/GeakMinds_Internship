@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection AI</title>
+    <!-- Google Fonts for Modern Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for SHAP Explanation -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div>
+                <h1>DeepFraud <span>AI</span></h1>
+                <p>Real-time Credit Card Fraud Detection with Explainable Insights</p>
+            </div>
+            <div class="status-indicator">
+                <span class="dot"></span> System Operational
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Left Panel: Transaction Simulation -->
+            <section class="panel glass-panel">
+                <h2>Transaction Input</h2>
+                <div class="action-buttons">
+                    <button class="btn btn-legit" onclick="loadRandomTransaction('legit')">Load Legit</button>
+                    <button class="btn btn-fraud" onclick="loadRandomTransaction('fraud')">Load Fraud</button>
+                    <button class="btn btn-custom" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
+                    <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
+                    <button class="btn btn-custom" onclick="clearTransaction()">Clear</button>
+                </div>
+                
+                <div class="editor-container">
+                    <label for="transactionData">Transaction JSON Data (30 Features)</label>
+                    <textarea id="transactionData" placeholder='{"Time": 0.0, "V1": -1.3, ...}' spellcheck="false"></textarea>
+                </div>
+
+                <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeTransaction()">
+                    Analyze Transaction
+                </button>
+                
+                <div class="loader" id="loader" style="display: none;"></div>
+            </section>
+
+            <!-- Right Panel: AI Results -->
+            <section class="panel glass-panel results-panel" id="resultsPanel">
+                <div class="empty-state" id="emptyState">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <h3>Awaiting Transaction</h3>
+                    <p>Load and analyze a transaction to see results.</p>
+                </div>
+
+                <!-- Active State -->
+                <div class="active-state" id="activeState" style="display: none;">
+                    <h2>AI Verdict</h2>
+                    
+                    <div class="verdict-banner" id="verdictBanner">
+                        <h1 id="predictionText">Legitimate</h1>
+                        <p id="probabilityText">0.5% Probability of Fraud</p>
+                    </div>
+
+                    <div class="explanation-section">
+                        <h3>SHAP Feature Importance</h3>
+                        <p class="explain-subtitle">Understanding which features impacted the prediction</p>
+                        <div class="chart-container">
+                            <canvas id="shapChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
