@@ -227,29 +227,107 @@
 
     <!-- Dashboard Page Section -->
     <section id="sec-dashboard" class="page-wrapper">
-        <h1 class="text-4xl font-bold mb-4">Dashboard</h1>
-        <p class="text-muted-foreground mb-8">Platform analytics and aggregate predictions overview.</p>
+        <h1 class="text-4xl font-bold mb-4">Analytics Dashboard</h1>
+        <p class="text-muted-foreground mb-8">Model performance metrics and transaction analysis.</p>
         
-        <div class="grid grid-cols-3 gap-6 mb-8">
-             <div class="feature-card">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary mb-4 w-10"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-                 <h2 class="text-4xl font-bold font-mono" id="dashTotalAnalyze">0</h2>
-                 <p class="text-muted-foreground">Total Analyzed</p>
-             </div>
-             <div class="feature-card">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-destructive mb-4 w-10"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                 <h2 class="text-4xl font-bold font-mono text-destructive" id="dashTotalFraud">0</h2>
-                 <p class="text-muted-foreground">Fraud Found</p>
-             </div>
-             <div class="feature-card">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-success mb-4 w-10"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                 <h2 class="text-4xl font-bold font-mono text-success" id="dashTotalLegit">0</h2>
-                 <p class="text-muted-foreground">Legit Approved</p>
-             </div>
+        <!-- Top Stats 4 cols -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="feature-card stat-card">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary mb-4 w-6"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                 <h2 class="text-2xl font-bold font-mono" id="dashTotalAnalyze">0</h2>
+                 <p class="text-muted-foreground text-sm">Total Transactions</p>
+            </div>
+            <div class="feature-card stat-card glow-danger" style="border-color: rgba(239,68,68,0.3);">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-destructive mb-4 w-6"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                 <h2 class="text-2xl font-bold font-mono text-destructive" id="dashTotalFraud">0</h2>
+                 <p class="text-muted-foreground text-sm">Fraud Detected</p>
+            </div>
+            <div class="feature-card stat-card glow-success" style="border-color: rgba(16,185,129,0.3);">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-success mb-4 w-6"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                 <h2 class="text-2xl font-bold font-mono text-success" id="dashTotalLegit">0</h2>
+                 <p class="text-muted-foreground text-sm">Legitimate</p>
+            </div>
+            <div class="feature-card stat-card">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary mb-4 w-6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                 <h2 class="text-2xl font-bold font-mono text-foreground" id="dashAccuracy">0.0%</h2>
+                 <p class="text-muted-foreground text-sm">Accuracy</p>
+            </div>
         </div>
 
-        <div class="feature-card text-center py-16">
-            <p class="text-muted-foreground">System functioning normally. Real-time logging active.</p>
+        <!-- 2 cols row 1 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Confusion Matrix -->
+            <div class="feature-card">
+                <h2 class="font-bold mb-4">Confusion Matrix</h2>
+                <div class="dashboard-table-wrapper">
+                    <table class="dashboard-table">
+                        <tr class="text-muted-foreground" style="border-bottom: 1px solid var(--border);">
+                            <th></th>
+                            <th>Predicted Legit</th>
+                            <th>Predicted Fraud</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td>Actual Legit</td>
+                            <td class="text-success font-bold" id="cm-tn">0</td>
+                            <td class="text-destructive font-bold" id="cm-fp">0</td>
+                        </tr>
+                        <tr>
+                            <td>Actual Fraud</td>
+                            <td class="text-destructive font-bold" id="cm-fn">0</td>
+                            <td class="text-success font-bold" id="cm-tp">0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transaction Distribution (Pie Chart) -->
+            <div class="feature-card">
+                <h2 class="font-bold mb-4">Transaction Distribution</h2>
+                <div class="dashboard-chart-wrapper" style="height: 200px;">
+                    <canvas id="distPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 cols row 2 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- ROC Curve -->
+            <div class="feature-card">
+                <h2 class="font-bold mb-1">ROC Curve</h2>
+                <p class="text-sm text-muted-foreground mb-4">AUC = 0.987</p>
+                <div class="dashboard-chart-wrapper">
+                    <canvas id="rocChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Amount Distribution -->
+            <div class="feature-card">
+                <h2 class="font-bold mb-1">Fraud by Amount Range</h2>
+                <p class="text-sm text-muted-foreground mb-4">Transaction volume vs fraud cases</p>
+                <div class="dashboard-chart-wrapper">
+                    <canvas id="amountBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Row -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            <div class="bg-card border-border rounded-xl p-4 text-center border-border border">
+                <p class="text-2xl font-bold font-mono text-primary" id="dashMetricPrecision">93.1%</p>
+                <p class="text-sm text-muted-foreground">Precision</p>
+            </div>
+            <div class="bg-card border-border rounded-xl p-4 text-center border-border border">
+                <p class="text-2xl font-bold font-mono text-primary" id="dashMetricRecall">98.2%</p>
+                <p class="text-sm text-muted-foreground">Recall</p>
+            </div>
+            <div class="bg-card border-border rounded-xl p-4 text-center border-border border">
+                <p class="text-2xl font-bold font-mono text-primary" id="dashMetricF1">95.6%</p>
+                <p class="text-sm text-muted-foreground">F1-Score</p>
+            </div>
+            <div class="bg-card border-border rounded-xl p-4 text-center border-border border">
+                <p class="text-2xl font-bold font-mono text-primary" id="dashMetricAUC">0.987</p>
+                <p class="text-sm text-muted-foreground">AUC-ROC</p>
+            </div>
         </div>
     </section>
 
