@@ -160,5 +160,61 @@ async def predict_fraud(transaction: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/predict_batch")
+async def predict_fraud_batch(request: Request):
+    if model is None or explainer is None:
+        raise HTTPException(status_code=500, detail="Models are not loaded.")
+        
+    data_list = await request.json()
+    if not isinstance(data_list, list):
+        raise HTTPException(status_code=400, detail="Expected a JSON array of transactions.")
+        
+    formatted_data_list = []
+    for data_dict in data_list:
+        formatted_data = {}
+        for f in feature_names:
+            formatted_data[f] = float(data_dict.get(f, 0.0))
+        formatted_data_list.append(formatted_data)
+        
+    df = pd.DataFrame(formatted_data_list)
+    
+    try:
+        predictions = model.predict(df)
+        prediction_probas = model.predict_proba(df)[:, 1]
+        
+        # Calculate SHAP values for all rows
+        shap_values_obj = explainer(df)
+        all_shap_values = shap_values_obj.values
+        
+        results = []
+        for row_idx in range(len(formatted_data_list)):
+            row_data = formatted_data_list[row_idx]
+            shap_vals = all_shap_values[row_idx]
+            
+            feature_importance = []
+            for i, feat in enumerate(feature_names):
+                sv = shap_vals[i]
+                if hasattr(sv, '__iter__') and not isinstance(sv, str):
+                    sv = sv[-1]
+                feature_importance.append({
+                    "feature": feat,
+                    "value": round(row_data[feat], 4),
+                    "shap_value": float(sv)
+                })
+            
+            # Sort top 10
+            feature_importance = sorted(feature_importance, key=lambda x: abs(x["shap_value"]), reverse=True)[:10]
+            
+            results.append({
+                "prediction": "Fraud" if predictions[row_idx] == 1 else "Legitimate",
+                "fraud_probability": float(prediction_probas[row_idx]),
+                "shap_explanation": feature_importance
+            })
+            
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

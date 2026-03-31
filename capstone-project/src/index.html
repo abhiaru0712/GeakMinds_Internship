@@ -4,83 +4,335 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fraud Detection AI</title>
-    <!-- Google Fonts for Modern Look -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts matching the React template -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js for SHAP Explanation -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
 
-    <div class="dashboard-container">
-        <!-- Header Section -->
-        <header class="dashboard-header">
-            <div>
-                <h1>DeepFraud <span>AI</span></h1>
-                <p>Real-time Credit Card Fraud Detection with Explainable Insights</p>
-            </div>
-            <div class="status-indicator">
-                <span class="dot"></span> System Operational
-            </div>
-        </header>
-
-        <div class="dashboard-grid">
-            <!-- Left Panel: Transaction Simulation -->
-            <section class="panel glass-panel">
-                <h2>Transaction Input</h2>
-                <div class="action-buttons">
-                    <button class="btn btn-legit" onclick="loadRandomTransaction('legit')">Load Legit</button>
-                    <button class="btn btn-fraud" onclick="loadRandomTransaction('fraud')">Load Fraud</button>
-                    <button class="btn btn-custom" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
-                    <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
-                    <button class="btn btn-custom" onclick="clearTransaction()">Clear</button>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-brand group">
+                <div class="nav-icon glow-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 </div>
-                
-                <div class="editor-container">
-                    <label for="transactionData">Transaction JSON Data (30 Features)</label>
-                    <textarea id="transactionData" placeholder='{"Time": 0.0, "V1": -1.3, ...}' spellcheck="false"></textarea>
-                </div>
+                <span>Fraud<span class="text-primary">Shield</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#home" class="nav-link" id="nav-home">Home</a>
+                <a href="#upload" class="nav-link" id="nav-upload">Upload</a>
+                <a href="#predict" class="nav-link" id="nav-predict">Prediction</a>
+                <a href="#dashboard" class="nav-link" id="nav-dashboard">Dashboard</a>
+                <a href="#report" class="nav-link" id="nav-report">Report</a>
+            </div>
+        </div>
+    </nav>
 
-                <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeTransaction()">
-                    Analyze Transaction
+    <!-- Home Page Section -->
+    <section id="sec-home" class="page-wrapper active-page">
+        <!-- Hero Section -->
+        <div style="text-align: center; position: relative;" class="py-16">
+            <div class="scan-line"></div>
+            <div class="nav-icon glow-primary mx-auto mb-8" style="width: 80px; height: 80px; border-radius: 1rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary" style="width: 40px; height: 40px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <h1 class="text-6xl font-bold mb-4">
+                Fraud Detection with<br>
+                <span class="text-primary">Explainable AI</span>
+            </h1>
+            <p class="text-muted-foreground max-w-2xl mx-auto mb-8" style="font-size: 1.125rem;">
+                Upload transaction data, detect fraud with machine learning, and understand every prediction with SHAP-powered explanations.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="#upload" class="btn btn-primary" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Get Started
+                </a>
+                <a href="#dashboard" class="btn btn-outline" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    View Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="py-16">
+            <h2 class="text-4xl font-bold text-center mb-8">How It Works</h2>
+            <div class="grid grid-cols-4 gap-6">
+                <!-- Step 1 -->
+                <div class="feature-card" style="position: relative;">
+                    <span style="position: absolute; top: 0.5rem; right: 1rem; font-size: 3rem; font-weight: bold; opacity: 0.1; font-family: monospace;" class="text-primary">01</span>
+                    <h3 class="font-bold mb-2">Upload</h3>
+                    <p class="text-muted-foreground text-sm">Upload JSON transaction data or test using random samples.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="feature-card" style="position: relative;">
+                    <span style="position: absolute; top: 0.5rem; right: 1rem; font-size: 3rem; font-weight: bold; opacity: 0.1; font-family: monospace;" class="text-primary">02</span>
+                    <h3 class="font-bold mb-2">Predict</h3>
+                    <p class="text-muted-foreground text-sm">ML model classifies each transaction in real-time.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="feature-card" style="position: relative;">
+                    <span style="position: absolute; top: 0.5rem; right: 1rem; font-size: 3rem; font-weight: bold; opacity: 0.1; font-family: monospace;" class="text-primary">03</span>
+                    <h3 class="font-bold mb-2">Explain</h3>
+                    <p class="text-muted-foreground text-sm">SHAP values reveal exact decision factors.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="feature-card" style="position: relative;">
+                    <span style="position: absolute; top: 0.5rem; right: 1rem; font-size: 3rem; font-weight: bold; opacity: 0.1; font-family: monospace;" class="text-primary">04</span>
+                    <h3 class="font-bold mb-2">Analyse</h3>
+                    <p class="text-muted-foreground text-sm">Review dashboard visually and interact with results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CSV Upload Page (Mock) Section -->
+    <section id="sec-upload" class="page-wrapper">
+        <h1 class="text-4xl font-bold mb-4">Upload Transaction Data</h1>
+        <p class="text-muted-foreground mb-8">Upload a CSV file containing transaction details (Time, Amount, V1–V28 features).</p>
+        
+        <!-- Drop zone -->
+        <div class="upload-area" id="uploadDropzone" onclick="document.getElementById('csvFileInput').click()">
+            <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleCSVUpload(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted-foreground mx-auto mb-4 w-12 h-12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p class="font-bold mb-2">Drop your CSV file here</p>
+            <p class="text-muted-foreground text-sm">or click to browse</p>
+        </div>
+
+        <!-- File Info Card -->
+        <div class="feature-card mt-6" id="file-info" style="display: none; align-items: center; gap: 1rem; padding: 1rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary w-10 h-10 flex-shrink-0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <div style="flex: 1; min-width: 0;">
+                <p class="font-bold text-foreground truncate" id="filename-display">file.csv</p>
+                <p class="text-sm text-muted-foreground" id="filesize-display">0 KB</p>
+            </div>
+            
+            <button class="btn btn-primary btn-sm" id="upload-process-btn">Upload & Process</button>
+            
+            <div id="upload-ready-state" style="display: none; align-items: center; gap: 0.5rem;" class="text-success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="text-sm font-bold">Ready</span>
+            </div>
+        </div>
+
+        <!-- Go To Prediction Button -->
+        <div id="proceed-btn-container" class="mt-8 text-center" style="display: none; animation: fadeIn 0.4s ease forwards;">
+            <button class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.125rem;" onclick="processMockCSV()">Proceed to Prediction <span style="margin-left:8px;">→</span></button>
+        </div>
+
+        <!-- Expected Format -->
+        <div class="feature-card mt-8">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary w-5 h-5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Expected CSV Format
+            </h3>
+            <div style="overflow-x: auto;">
+                <table class="w-full text-sm font-mono" style="text-align: left;">
+                    <thead>
+                        <tr class="text-muted-foreground" style="border-bottom: 1px solid var(--border);">
+                            <th style="padding: 0.5rem 1rem 0.5rem 0;">Time</th>
+                            <th style="padding: 0.5rem 1rem 0.5rem 0;">V1</th>
+                            <th style="padding: 0.5rem 1rem 0.5rem 0;">V2</th>
+                            <th style="padding: 0.5rem 1rem 0.5rem 0;">...</th>
+                            <th style="padding: 0.5rem 1rem 0.5rem 0;">V28</th>
+                            <th style="padding: 0.5rem 1rem 0.5rem 0;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 0.5rem 1rem 0.5rem 0; border: none;">0</td>
+                            <td style="padding: 0.5rem 1rem 0.5rem 0; border: none;">-1.36</td>
+                            <td style="padding: 0.5rem 1rem 0.5rem 0; border: none;">-0.07</td>
+                            <td style="padding: 0.5rem 1rem 0.5rem 0; border: none;">...</td>
+                            <td style="padding: 0.5rem 1rem 0.5rem 0; border: none;">-0.02</td>
+                            <td style="padding: 0.5rem 1rem 0.5rem 0; border: none;">149.62</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prediction / JSON Upload Page Section -->
+    <section id="sec-predict" class="page-wrapper">
+        <h1 class="text-4xl font-bold mb-4">Fraud Prediction</h1>
+        <p class="text-muted-foreground mb-8">Run the machine learning model on uploaded transaction JSON data.</p>
+        
+        <!-- Controls area -->
+        <div class="controls-row">
+            <button class="btn btn-outline" onclick="loadRandomData('legit')">Load Random Legit</button>
+            <button class="btn btn-outline" onclick="loadRandomData('fraud')">Load Random Fraud</button>
+            <button class="btn btn-primary" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
+            <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="handleJSONUpload(event)">
+            
+            <button class="btn btn-primary" onclick="document.getElementById('csvFileInputReal').click()">Upload CSV (Batch)</button>
+            <input type="file" id="csvFileInputReal" accept=".csv" style="display: none;" onchange="handleRealCSVUpload(event)">
+            
+            <button class="btn btn-outline text-destructive border-border hover:bg-destructive text-white ml-auto" id="btnClear" onclick="clearData()" style="display: none;">Clear All</button>
+            <button class="btn btn-primary" id="btnAnalyze" onclick="analyzeAll()" style="display: none;">Predict Uploaded Data</button>
+        </div>
+
+        <!-- Empty State UI -->
+        <div id="readyToAnalyze" style="text-align: center;" class="feature-card py-16 mb-8 mt-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary mx-auto mb-6 w-16 h-16"><path d="M12 2v20 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <h2 class="text-2xl font-bold mb-2">Ready to Analyze</h2>
+            <p class="text-muted-foreground mb-6">Load samples or upload JSON to begin fraud detection</p>
+        </div>
+
+        <!-- Results Area -->
+        <div id="resultsContainer" style="display: none;">
+            <!-- Summary Stats -->
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <p class="text-4xl font-mono font-bold" id="statTotal">0</p>
+                    <p class="text-sm text-muted-foreground">Total Transactions</p>
+                </div>
+                <div class="summary-box glow-danger">
+                    <p class="text-4xl font-mono font-bold text-destructive" id="statFraud">0</p>
+                    <p class="text-sm text-muted-foreground">Fraud Detected</p>
+                </div>
+                <div class="summary-box glow-success">
+                    <p class="text-4xl font-mono font-bold text-success" id="statLegit">0</p>
+                    <p class="text-sm text-muted-foreground">Legitimate</p>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <div class="table-scroll">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th># ID</th>
+                                <th>Time</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Probability</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p class="text-center text-sm text-muted-foreground mt-4">Click "Analyze" to run prediction for pending items. Click on processed rows to view the SHAP visualizer.</p>
+        </div>
+    </section>
+
+    <!-- Dashboard Page Section -->
+    <section id="sec-dashboard" class="page-wrapper">
+        <h1 class="text-4xl font-bold mb-4">Dashboard</h1>
+        <p class="text-muted-foreground mb-8">Platform analytics and aggregate predictions overview.</p>
+        
+        <div class="grid grid-cols-3 gap-6 mb-8">
+             <div class="feature-card">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary mb-4 w-10"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                 <h2 class="text-4xl font-bold font-mono" id="dashTotalAnalyze">0</h2>
+                 <p class="text-muted-foreground">Total Analyzed</p>
+             </div>
+             <div class="feature-card">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-destructive mb-4 w-10"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                 <h2 class="text-4xl font-bold font-mono text-destructive" id="dashTotalFraud">0</h2>
+                 <p class="text-muted-foreground">Fraud Found</p>
+             </div>
+             <div class="feature-card">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-success mb-4 w-10"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                 <h2 class="text-4xl font-bold font-mono text-success" id="dashTotalLegit">0</h2>
+                 <p class="text-muted-foreground">Legit Approved</p>
+             </div>
+        </div>
+
+        <div class="feature-card text-center py-16">
+            <p class="text-muted-foreground">System functioning normally. Real-time logging active.</p>
+        </div>
+    </section>
+
+    <!-- Report Page Section -->
+    <section id="sec-report" class="page-wrapper">
+        <h1 class="text-4xl font-bold mb-4">Download Reports</h1>
+        <p class="text-muted-foreground mb-8">Export prediction results, fraud reports, and explanation documents.</p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- CSV Report -->
+            <div class="feature-card" style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="nav-icon glow-primary" style="width: 48px; height: 48px; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <div style="flex: 1; min-width: 0;">
+                    <h3 class="font-bold">Prediction Results (CSV)</h3>
+                    <p class="text-muted-foreground" style="font-size: 0.875rem;">Full list of all processed transactions including probability scores and model verdict.</p>
+                    <p class="text-muted-foreground font-mono mt-4" style="font-size: 0.75rem;">prediction_results.csv</p>
+                </div>
+                <button class="btn btn-outline" style="flex-shrink: 0;" onclick="downloadCSVReport('full')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download
                 </button>
-                
-                <div class="loader" id="loader" style="display: none;"></div>
-            </section>
+            </div>
 
-            <!-- Right Panel: AI Results -->
-            <section class="panel glass-panel results-panel" id="resultsPanel">
-                <div class="empty-state" id="emptyState">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <h3>Awaiting Transaction</h3>
-                    <p>Load and analyze a transaction to see results.</p>
+            <!-- Fraud Filtered Report -->
+            <div class="feature-card" style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="nav-icon glow-danger" style="width: 48px; height: 48px; flex-shrink: 0; background-color: rgba(239, 68, 68, 0.1);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-destructive"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 </div>
-
-                <!-- Active State -->
-                <div class="active-state" id="activeState" style="display: none;">
-                    <h2>AI Verdict</h2>
-                    
-                    <div class="verdict-banner" id="verdictBanner">
-                        <h1 id="predictionText">Legitimate</h1>
-                        <p id="probabilityText">0.5% Probability of Fraud</p>
-                    </div>
-
-                    <div class="explanation-section">
-                        <h3>SHAP Feature Importance</h3>
-                        <p class="explain-subtitle">Understanding which features impacted the prediction</p>
-                        <div class="chart-container">
-                            <canvas id="shapChart"></canvas>
-                        </div>
-                    </div>
+                <div style="flex: 1; min-width: 0;">
+                    <h3 class="font-bold">Fraud Analysis Report (CSV)</h3>
+                    <p class="text-muted-foreground" style="font-size: 0.875rem;">Filtered list exclusively returning positive fraud detections.</p>
+                    <p class="text-muted-foreground font-mono mt-4" style="font-size: 0.75rem;">fraud_report.csv</p>
                 </div>
-            </section>
+                <button class="btn btn-outline" style="flex-shrink: 0;" onclick="downloadCSVReport('fraud')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHAP Modal -->
+    <div id="shapModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">
+                    <span id="modalBadge" class="status-badge">Unknown</span>
+                    Transaction #<span id="modalTxId">ID</span>
+                </h2>
+            </div>
+            
+            <div class="modal-stats">
+                <div class="modal-stat-box">
+                    <p class="text-muted-foreground" style="font-size: 0.75rem;">Amount</p>
+                    <p class="font-bold font-mono text-xl" id="modalAmount">$0.00</p>
+                </div>
+                <div class="modal-stat-box">
+                    <p class="text-muted-foreground" style="font-size: 0.75rem;">Time</p>
+                    <p class="font-bold font-mono text-xl" id="modalTime">0s</p>
+                </div>
+                <div class="modal-stat-box">
+                    <p class="text-muted-foreground" style="font-size: 0.75rem;">Fraud Prob.</p>
+                    <p class="font-bold font-mono text-xl" id="modalProb">0%</p>
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-1" style="font-size: 0.875rem;">SHAP Waterfall Chart</h3>
+            <p class="text-muted-foreground mb-4" style="font-size: 0.75rem;">Feature contributions to this prediction</p>
+            
+            <div class="chart-wrapper">
+                <canvas id="modalChart"></canvas>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem;" class="text-muted-foreground" style="font-size:0.75rem;">
+                <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;background:var(--destructive);border-radius:2px;margin-right:4px;"></span> Pushes toward Fraud</span>
+                <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;background:var(--success);border-radius:2px;margin-right:4px;"></span> Pushes toward Legit</span>
+            </div>
+
+            <div id="modalExplanation" class="explanation-box">
+                <!-- Text updated by JS -->
+            </div>
         </div>
     </div>
 
